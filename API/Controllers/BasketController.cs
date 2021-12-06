@@ -28,15 +28,15 @@ namespace API.Controllers
             return MapBasketToDto(basket);
         }
 
-        
 
-        [HttpPost] 
+
+        [HttpPost]
         public async Task<ActionResult<BasketDto>> AddItemToBasket(int productId, int quantity)
         {
             var basket = await RetrieveBasket();
             if (basket == null) basket = CreateBasket();
             var product = await _context.Products.FindAsync(productId);
-            if (product == null) return NotFound();
+            if (product == null) return BadRequest(new ProblemDetails{ Title = "Product Not Found" });;
             basket.AddItem(product, quantity);
 
             var result = await _context.SaveChangesAsync() > 0;
@@ -52,10 +52,10 @@ namespace API.Controllers
             var basket = await RetrieveBasket();
             if (basket == null) return NotFound();
             basket.RemoveItem(productId, quantity);
-           var result = await _context.SaveChangesAsync() > 0;
-           if (result) return Ok();
+            var result = await _context.SaveChangesAsync() > 0;
+            if (result) return Ok();
 
-           return BadRequest(new ProblemDetails{Title = "Problem removing item from Shopping Cart"});
+            return BadRequest(new ProblemDetails { Title = "Problem removing item from Shopping Cart" });
         }
         private async Task<Basket> RetrieveBasket()
         {
