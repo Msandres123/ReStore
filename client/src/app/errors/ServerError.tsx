@@ -4,7 +4,6 @@ import { useHistory, useLocation } from 'react-router-dom';
 export default function ServerError() {
   const history = useHistory();
   const { state } = useLocation<any>();
-  console.log(state.error)
   return (
     <Container component={Paper}>
       {state?.error   ? (
