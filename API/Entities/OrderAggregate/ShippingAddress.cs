@@ -1,0 +1,12 @@
+using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
+
+namespace API.Entities.OrderAggregate
+{
+   [Owned]
+   
+    public class ShippingAddress : Address 
+    {
+        
+    }
+}
