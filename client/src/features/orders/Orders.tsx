@@ -55,7 +55,9 @@ export default function Orders() {
                     <TableCell align="right">{currencyFormat(order.total)}</TableCell>
                     <TableCell align="right">{order.orderDate.split('T')[0]}</TableCell>
                     <TableCell align="right">{order.orderStatus}</TableCell>
-                    <Button onClick={() => setSelectedOrderNumber(order.id)}>View</Button>
+                    <TableCell align="right">
+                      <Button onClick={() => setSelectedOrderNumber(order.id)}>View</Button>
+                      </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
