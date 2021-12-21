@@ -26,9 +26,9 @@ namespace API.Controllers
             _config = config;
             _context = context;
             _paymentService = paymentService;
-
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<BasketDto>> CreateOrUpdatePaymentIntent()
         {
@@ -36,22 +36,22 @@ namespace API.Controllers
                 .RetrieveBasketWithItems(User.Identity.Name)
                 .FirstOrDefaultAsync();
 
-                if (basket == null) return NotFound();
+            if (basket == null) return NotFound();
 
-                var intent = await _paymentService.CreateOrUpdatePaymentIntent(basket);
+            var intent = await _paymentService.CreateOrUpdatePaymentIntent(basket);
 
-                if (intent == null) return BadRequest(new ProblemDetails{Title = "Problem creating payment intent"});
+            if (intent == null) return BadRequest(new ProblemDetails { Title = "Problem creating payment intent" });
 
-                basket.PaymentIntentId = basket.PaymentIntentId ?? intent.Id;
-                basket.ClientSecret = basket.ClientSecret ?? intent.ClientSecret;
+            basket.PaymentIntentId = basket.PaymentIntentId ?? intent.Id;
+            basket.ClientSecret = basket.ClientSecret ?? intent.ClientSecret;
 
-                _context.Update(basket);
+            _context.Update(basket);
 
-                var result = await _context.SaveChangesAsync() > 0;
+            var result = await _context.SaveChangesAsync() > 0;
 
-                if (!result) return BadRequest(new ProblemDetails{Title = "Problem updating basket with intent"});
+            if (!result) return BadRequest(new ProblemDetails { Title = "Problem updating basket with intent" });
 
-                return basket.MapBasketToDto();
+            return basket.MapBasketToDto();
         }
 
         [HttpPost("webhook")]
