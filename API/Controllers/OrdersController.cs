@@ -1,4 +1,3 @@
-
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -26,19 +25,19 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult<List<OrderDto>>> GetOrders()
         {
-            return await _context.Orders
-            .ProjectOrderToOrderDto()
-            .Where(x => x.BuyerId == User.Identity.Name)
-            .ToListAsync();
+             return await _context.Orders
+                .ProjectOrderToOrderDto()
+                .Where(x => x.BuyerId == User.Identity.Name)
+                .ToListAsync();
         }
 
         [HttpGet("{id}", Name = "GetOrder")]
         public async Task<ActionResult<OrderDto>> GetOrder(int id)
         {
             return await _context.Orders
-            .ProjectOrderToOrderDto()
-            .Where(x => x.BuyerId == User.Identity.Name && x.Id == id)
-            .FirstOrDefaultAsync();
+                .ProjectOrderToOrderDto()
+                .Where(x => x.BuyerId == User.Identity.Name && x.Id == id)
+                .FirstOrDefaultAsync();
         }
 
         [HttpPost]
@@ -48,7 +47,7 @@ namespace API.Controllers
                 .RetrieveBasketWithItems(User.Identity.Name)
                 .FirstOrDefaultAsync();
 
-            if (basket == null) return BadRequest(new ProblemDetails { Title = "Could not locate basket" });
+            if (basket == null) return BadRequest(new ProblemDetails{Title = "Could not locate basket"});
 
             var items = new List<OrderItem>();
 
@@ -61,6 +60,7 @@ namespace API.Controllers
                     Name = productItem.Name,
                     PictureUrl = productItem.PictureUrl
                 };
+
                 var orderItem = new OrderItem
                 {
                     ItemOrdered = itemOrdered,
@@ -90,8 +90,8 @@ namespace API.Controllers
             if (orderDto.SaveAddress)
             {
                 var user = await _context.Users
-                .Include(a => a.Address)
-                .FirstOrDefaultAsync(x => x.UserName == User.Identity.Name);
+                    .Include(a => a.Address)
+                    .FirstOrDefaultAsync(x => x.UserName == User.Identity.Name);
 
                 var address = new UserAddress
                 {
@@ -99,9 +99,9 @@ namespace API.Controllers
                     Address1 = orderDto.ShippingAddress.Address1,
                     Address2 = orderDto.ShippingAddress.Address2,
                     City = orderDto.ShippingAddress.City,
-                    State= orderDto.ShippingAddress.State,
-                    Zip= orderDto.ShippingAddress.Zip,
-                    Country = orderDto.ShippingAddress.Country,
+                    State = orderDto.ShippingAddress.State,
+                    Zip = orderDto.ShippingAddress.Zip,
+                    Country = orderDto.ShippingAddress.Country
                 };
                 user.Address = address;
             }
@@ -110,8 +110,7 @@ namespace API.Controllers
 
             if (result) return CreatedAtRoute("GetOrder", new {id = order.Id}, order.Id);
 
-            return BadRequest("Problem creating order");
-
+            return BadRequest(new ProblemDetails{Title = "Problem creating order"});
         }
     }
 }
