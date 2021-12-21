@@ -37,6 +37,7 @@ namespace API.Controllers
                 {
                     Status = 500,
                     Detail = _env.IsDevelopment() ? ex.StackTrace?.ToString() : null,
+                    Title = ex.Message
                 };
 
                 var options = new JsonSerializerOptions{PropertyNamingPolicy = 
@@ -45,8 +46,6 @@ namespace API.Controllers
                 var json = JsonSerializer.Serialize(response, options);
 
                 await context.Response.WriteAsync(json);
-
-
             }
         }
     }

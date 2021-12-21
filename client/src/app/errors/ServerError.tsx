@@ -11,7 +11,7 @@ export default function ServerError() {
       {state?.error   ? (
         <>
           <Typography variant="h3" color="error" gutterBottom>
-          {state.error.status} Server Error 
+          {state.error.title} 
           </Typography>
           <Divider />
           <Typography>
