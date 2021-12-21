@@ -98,6 +98,7 @@ namespace API.Controllers
                 .Select(user => user.Address)
                 .FirstOrDefaultAsync();
         }
+
         private async Task<Basket> RetrieveBasket(string buyerId)
         {
             if (string.IsNullOrEmpty(buyerId))
